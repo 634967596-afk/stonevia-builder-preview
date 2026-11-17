@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StoneVia 搭建器 · 固定预览</title>
+<style>
+html,body{height:100%;margin:0;background:#F2F3F5;overflow:hidden}
+iframe{width:100%;height:100%;border:0;display:block;background:#F2F3F5}
+#err{display:none;padding:40px;font:14px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:#4E5969}
+</style>
+</head>
+<body>
+<iframe id="preview" title="StoneVia 搭建器" allow="clipboard-write"></iframe>
+<div id="err"></div>
+<script>
+(async function () {
+  const pointer = 'https://raw.githubusercontent.com/634967596-afk/stonevia-builder-preview/main/latest.txt?t=' + Date.now();
+  try {
+    const res = await fetch(pointer, { cache: 'no-store' });
+    if (!res.ok) throw new Error('读取最新地址失败（' + res.status + '）');
+    const url = (await res.text()).trim();
+    if (!/^https:\/\/aka\.doubaocdn\.com\/s\/\S+/.test(url)) throw new Error('最新地址格式不正确');
+    document.getElementById('preview').src = url;
+  } catch (e) {
+    document.getElementById('err').style.display = 'block';
+    document.getElementById('err').textContent = '预览加载失败：' + (e.message || e);
+  }
+})();
+</script>
+</body>
+</html>
