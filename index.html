@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="cache-control" content="no-cache">
 <title>StoneVia 搭建器 · 固定预览</title>
 <style>
 html,body{height:100%;margin:0;background:#F2F3F5;overflow:hidden}
@@ -11,17 +12,20 @@ iframe{width:100%;height:100%;border:0;display:block;background:#F2F3F5}
 </style>
 </head>
 <body>
-<iframe id="preview" title="StoneVia 搭建器" allow="clipboard-write"></iframe>
+<iframe id="preview" title="StoneVia 搭建器" allow="clipboard-write" src="https://aka.doubaocdn.com/s/dHA8Se9DdV"></iframe>
 <div id="err"></div>
 <script>
 (async function () {
+  const fallback = 'https://aka.doubaocdn.com/s/dHA8Se9DdV';
   const pointer = 'https://raw.githubusercontent.com/634967596-afk/stonevia-builder-preview/main/latest.txt?t=' + Date.now();
+  const frame = document.getElementById('preview');
+  if (!frame.getAttribute('src')) frame.src = fallback;
   try {
     const res = await fetch(pointer, { cache: 'no-store' });
     if (!res.ok) throw new Error('读取最新地址失败（' + res.status + '）');
     const url = (await res.text()).trim();
     if (!/^https:\/\/aka\.doubaocdn\.com\/s\/\S+/.test(url)) throw new Error('最新地址格式不正确');
-    document.getElementById('preview').src = url;
+    if (url !== frame.getAttribute('src')) frame.src = url;
   } catch (e) {
     document.getElementById('err').style.display = 'block';
     document.getElementById('err').textContent = '预览加载失败：' + (e.message || e);
